@@ -26,7 +26,7 @@ class Chromosome:
         y_s = np.fromiter(map(lambda city: city.y, self.cities), dtype=np.float)
         return x_s, y_s
     
-    def get_fitness_value(self) -> float:
+    def get_fitness_value(self):
         fitness_value = 0.0
         for i in range(self.chromosome_length):
             current_city = self.cities[i% self.chromosome_length]
@@ -36,9 +36,11 @@ class Chromosome:
         return fitness_value
 
     @staticmethod
-    def get_random_chromosome(chromosome_length: int) -> 'Chromosome':
+    def get_random_chromosome(chromosome_length: int):
         random_chromosome = Chromosome(chromosome_length)
         # TODO
         #   find a better way to initialize the cities array
         random_chromosome.cities = np.array([City.get_random_city() for _ in range(chromosome_length)])
+        for i in range(chromosome_length):
+            random_chromosome.cities[i].name = i
         return random_chromosome
