@@ -68,5 +68,9 @@ class Population:
     @staticmethod
     def get_random_population(population_size, chromosome_length):
         random_populaton = Population(population_size, chromosome_length)
-        random_populaton.individuals = np.array([Chromosome.get_random_chromosome(chromosome_length) for _ in range(population_size)])
+        random_chromosome = Chromosome.get_random_chromosome(chromosome_length)
+        for _ in range(population_size):
+            shuffled_chromosome = np.copy(random_chromosome)
+            np.random.shuffle(shuffled_chromosome)
+            random_populaton.individuals.append(shuffled_chromosome)
         return random_populaton
