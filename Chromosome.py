@@ -7,7 +7,7 @@ class Chromosome:
         self.chromosome_length = chromosome_length
         # TODO:
         #   what should be the value of cities initially
-        self.cities: List[City] = []
+        self.cities = []
         self.fitness = 0.0
     
     def __repr__(self):
@@ -17,9 +17,8 @@ class Chromosome:
         res += 'fitness value: {}'.format(self.fitness)
         return res
     
-    def __lt__(self, other_chromosome: 'Chromosome') -> bool:
+    def __lt__(self, other_chromosome):
         return self.fitness < other_chromosome.fitness
-        pass
     
     def plot_solution(self):
         x_s = np.fromiter(map(lambda city: city.x, self.cities), dtype=np.float)
@@ -42,5 +41,5 @@ class Chromosome:
         #   find a better way to initialize the cities array
         random_chromosome.cities = np.array([City.get_random_city() for _ in range(chromosome_length)])
         for i in range(chromosome_length):
-            random_chromosome.cities[i].name = i
+            random_chromosome.cities[i].id = i
         return random_chromosome

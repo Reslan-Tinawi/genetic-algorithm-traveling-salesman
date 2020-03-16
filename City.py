@@ -6,10 +6,10 @@ class City:
     def __init__(self, _x: float, _y: float):
         self.x = _x
         self.y = _y
-        self.name = None
+        self.id = None
 
     def __repr__(self):
-        return 'City({}, {}, {})'.format(self.name, self.x, self.y)
+        return 'City({}, {}, {})'.format(self.id, self.x, self.y)
     
     def distance_to(self, next_city: 'City'):
         u = [self.x, self.y]

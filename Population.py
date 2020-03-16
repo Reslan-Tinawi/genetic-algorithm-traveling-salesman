@@ -8,7 +8,6 @@ class Population:
     def __init__(self, population_size: int, chromosome_length: int):
         self.population_size = population_size
         self.chromosome_length = chromosome_length
-        # self.individuals: List['Chromosome'] = []
         self.individuals = []
     
     def __repr__(self):
@@ -52,14 +51,12 @@ class Population:
 
             offspring = GeneticOperators.order_one_crossover(first_child.cities, second_child.cities)
 
-            print('offspring: {}'.format(offspring))
-            return None
-
             # TODO:
             # here, generate a random number, and compare it with the
             # mutation rate, to either mutate the offspring, or not
 
             mutated_offspring = GeneticOperators.swap_mutation(offspring)
+            print(mutated_offspring)
 
             new_population.individuals.append(mutated_offspring)
 
@@ -67,10 +64,15 @@ class Population:
     
     @staticmethod
     def get_random_population(population_size, chromosome_length):
+        # TODO:
+        # the total possible number number of different individuals that can be generated for a `chromosome_length`
+        # is factorial of chromosome_length
+        # we should make sure that: population_size <= factorial of chromosome_length
+        # Also, consider using set or dictionary, so that the population will only contains unique chromosomes
         random_populaton = Population(population_size, chromosome_length)
         random_chromosome = Chromosome.get_random_chromosome(chromosome_length)
         for _ in range(population_size):
-            shuffled_chromosome = np.copy(random_chromosome)
-            np.random.shuffle(shuffled_chromosome)
+            shuffled_chromosome = copy.deepcopy(random_chromosome)
+            np.random.shuffle(shuffled_chromosome.cities)
             random_populaton.individuals.append(shuffled_chromosome)
         return random_populaton

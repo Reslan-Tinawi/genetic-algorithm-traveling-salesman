@@ -1,4 +1,5 @@
 import numpy as np
+from Chromosome import *
 
 class GeneticOperators:
     
@@ -17,26 +18,28 @@ class GeneticOperators:
         start_index = np.random.randint(0, mid + 1)
         end_index = start_index + mid
 
-        offspring = np.zeros(chromosome_length, dtype=int)
+        offspring = np.ndarray((chromosome_length,), dtype=np.object)
 
         sub_array = chromosome_1[start_index:end_index]
         offspring[start_index:end_index] = chromosome_1[start_index:end_index]
-        to_be_copied_elements = set(np.setdiff1d(chromosome_2, sub_array))
-        copied_elements = set(sub_array)
+        copied_elements = set(map(lambda x: x.id, sub_array))
+        to_be_copied_elements = set(map(lambda x: x.id, chromosome_2)) - copied_elements
 
         chromosome_2_index = end_index
         offspring_index = end_index
 
         while to_be_copied_elements:
             
-            if chromosome_2[chromosome_2_index] not in copied_elements:
+            if chromosome_2[chromosome_2_index].id not in copied_elements:
                 offspring[offspring_index] = chromosome_2[chromosome_2_index]
                 offspring_index = (offspring_index + 1) % chromosome_length
-                to_be_copied_elements.remove(chromosome_2[chromosome_2_index])
+                to_be_copied_elements.remove(chromosome_2[chromosome_2_index].id)
 
             chromosome_2_index = (chromosome_2_index + 1) % chromosome_length
 
-        return offspring
+        offspring_chromosome = Chromosome(chromosome_length)
+        offspring_chromosome.cities = offspring
+        return offspring_chromosome
     
     # mutation operator
     @staticmethod
