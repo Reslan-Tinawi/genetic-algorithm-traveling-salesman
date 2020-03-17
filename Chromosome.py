@@ -1,6 +1,7 @@
 import numpy as np
 from City import *
 import matplotlib.pyplot as plt
+import pandas as pd
 
 class Chromosome:
 
@@ -28,11 +29,12 @@ class Chromosome:
         plt.show()
     
     def get_fitness_value(self):
-        self.fitness = 0
-        for i in range(self.chromosome_length):
-            current_city = self.cities[i % self.chromosome_length]
-            next_city = self.cities[(i + 1) % self.chromosome_length]
-            self.fitness += current_city.distance_to(next_city)
+        if self.fitness == None:
+            self.fitness = 0
+            for i in range(self.chromosome_length):
+                current_city = self.cities[i % self.chromosome_length]
+                next_city = self.cities[(i + 1) % self.chromosome_length]
+                self.fitness += current_city.distance_to(next_city)
         
         return self.fitness
 
@@ -45,3 +47,17 @@ class Chromosome:
         for i in range(chromosome_length):
             random_chromosome.cities[i].id = i
         return random_chromosome
+    
+    @staticmethod
+    def read_chromosome_from_csv(csv_path):
+        data = pd.read_csv(csv_path)
+        
+        ids = data['ids'].values
+        x_s = data['x'].values
+        y_s = data['y'].values
+
+        chromosome_length = len(ids)
+        chromosome = Chromosome(chromosome_length)
+        chromosome.cities = np.array([City(x_s[i], y_s[i], ids[i]) for i in range(chromosome_length)])
+
+        return chromosome

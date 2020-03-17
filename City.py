@@ -3,10 +3,10 @@ from scipy.spatial import distance
 
 class City:
     
-    def __init__(self, _x: float, _y: float):
+    def __init__(self, _x: float, _y: float, id: int=None):
         self.x = _x
         self.y = _y
-        self.id = None
+        self.id = id
 
     def __repr__(self):
         return 'City({}, {}, {})'.format(self.id, self.x, self.y)
