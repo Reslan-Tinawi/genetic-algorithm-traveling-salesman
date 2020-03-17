@@ -5,10 +5,11 @@ import copy
 
 class Population:
 
-    def __init__(self, population_size: int, chromosome_length: int):
+    def __init__(self, population_size: int, chromosome_length: int, mutation_rate: float):
         self.population_size = population_size
         self.chromosome_length = chromosome_length
         self.individuals = []
+        self.mutation_rate = mutation_rate
     
     def __repr__(self):
         res = 'Population(population_size: {})'.format(self.population_size) + '\n'
@@ -36,31 +37,35 @@ class Population:
         # 5 - construct cumulative sum array
         cumulative_probabilities = np.cumsum(fitnesses_probabilities)
 
-        new_population: Population = Population(self.population_size, self.chromosome_length)
+        new_population: Population = Population(self.population_size, self.chromosome_length, self.mutation_rate)
 
         while len(new_population.individuals) != new_population.population_size:
 
-            first_child_index = GeneticOperators.roulette_wheel_selection(cumulative_probabilities)
-            second_child_index = GeneticOperators.roulette_wheel_selection(cumulative_probabilities)
+            first_parent_index = GeneticOperators.roulette_wheel_selection(cumulative_probabilities)
+            second_parent_index = GeneticOperators.roulette_wheel_selection(cumulative_probabilities)
 
-            if first_child_index == second_child_index:
+            if first_parent_index == second_parent_index:
                 continue
 
-            first_child = self.individuals[first_child_index]
-            second_child = self.individuals[second_child_index]
+            first_parent = self.individuals[first_parent_index]
+            second_parent = self.individuals[second_parent_index]
 
-            offspring = GeneticOperators.order_one_crossover(first_child, second_child)
+            offspring_1 = GeneticOperators.order_one_crossover(first_parent, second_parent)
 
-            # TODO:
-            # here, generate a random number, and compare it with the
-            # mutation rate, to either mutate the offspring, or not
-            mutated_offspring = GeneticOperators.swap_mutation(offspring)
+            offspring_2 = GeneticOperators.order_one_crossover(second_parent, first_parent)            
 
-            new_population.individuals.append(mutated_offspring)
+            random_number = np.random.random()
         
-        for chromosome in new_population.individuals:
-            chromosome.fitness = chromosome.get_fitness_value()
+            if random_number < self.mutation_rate:
 
+                mutated_offspring_1 = GeneticOperators.swap_mutation(offspring_1)
+                mutated_offspring_1.get_fitness_value()
+
+                mutated_offspring_2 = GeneticOperators.swap_mutation(offspring_2)
+                mutated_offspring_2.get_fitness_value()
+
+                new_population.individuals.append(min(mutated_offspring_1, mutated_offspring_2))
+        
         return new_population
     
     def get_fittest_individual(self):
@@ -68,16 +73,19 @@ class Population:
 
         return self.individuals[0]
 
-
     @staticmethod
-    def get_random_population(population_size, chromosome_length):
+    def get_random_population(population_size, chromosome_length, mutation_rate, chromosome_csv_path):
         # TODO:
         # the total possible number number of different individuals that can be generated for a `chromosome_length`
         # is factorial of chromosome_length
         # we should make sure that: population_size <= factorial of chromosome_length
         # Also, consider using set or dictionary, so that the population will only contains unique chromosomes
-        random_populaton = Population(population_size, chromosome_length)
-        random_chromosome = Chromosome.get_random_chromosome(chromosome_length)
+        random_populaton = Population(population_size, chromosome_length, mutation_rate)
+
+        if chromosome_csv_path:
+            random_chromosome = Chromosome.read_chromosome_from_csv(chromosome_csv_path)
+        else:
+            random_chromosome = Chromosome.get_random_chromosome(chromosome_length)
 
         for _ in range(population_size):
             shuffled_chromosome = copy.deepcopy(random_chromosome)
