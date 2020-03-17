@@ -49,19 +49,26 @@ class Population:
             first_child = self.individuals[first_child_index]
             second_child = self.individuals[second_child_index]
 
-            offspring = GeneticOperators.order_one_crossover(first_child.cities, second_child.cities)
+            offspring = GeneticOperators.order_one_crossover(first_child, second_child)
 
             # TODO:
             # here, generate a random number, and compare it with the
             # mutation rate, to either mutate the offspring, or not
-
             mutated_offspring = GeneticOperators.swap_mutation(offspring)
-            print(mutated_offspring)
 
             new_population.individuals.append(mutated_offspring)
+        
+        for chromosome in new_population.individuals:
+            chromosome.fitness = chromosome.get_fitness_value()
 
         return new_population
     
+    def get_fittest_individual(self):
+        self.individuals = np.sort(self.individuals)
+
+        return self.individuals[0]
+
+
     @staticmethod
     def get_random_population(population_size, chromosome_length):
         # TODO:
@@ -71,8 +78,13 @@ class Population:
         # Also, consider using set or dictionary, so that the population will only contains unique chromosomes
         random_populaton = Population(population_size, chromosome_length)
         random_chromosome = Chromosome.get_random_chromosome(chromosome_length)
+
         for _ in range(population_size):
             shuffled_chromosome = copy.deepcopy(random_chromosome)
             np.random.shuffle(shuffled_chromosome.cities)
+            shuffled_chromosome.get_fitness_value()
             random_populaton.individuals.append(shuffled_chromosome)
+        
+        random_populaton.individuals = np.sort(random_populaton.individuals)
+
         return random_populaton

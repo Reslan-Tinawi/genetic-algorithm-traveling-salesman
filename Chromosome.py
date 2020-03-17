@@ -1,5 +1,6 @@
 import numpy as np
 from City import *
+import matplotlib.pyplot as plt
 
 class Chromosome:
 
@@ -8,7 +9,7 @@ class Chromosome:
         # TODO:
         #   what should be the value of cities initially
         self.cities = []
-        self.fitness = 0.0
+        self.fitness = None
     
     def __repr__(self):
         res = 'Chromosome(chromosome_length: {})'.format(self.chromosome_length) + '\n'
@@ -23,16 +24,17 @@ class Chromosome:
     def plot_solution(self):
         x_s = np.fromiter(map(lambda city: city.x, self.cities), dtype=np.float)
         y_s = np.fromiter(map(lambda city: city.y, self.cities), dtype=np.float)
-        return x_s, y_s
+        plt.scatter(x_s, y_s)
+        plt.show()
     
     def get_fitness_value(self):
-        fitness_value = 0.0
+        self.fitness = 0
         for i in range(self.chromosome_length):
-            current_city = self.cities[i% self.chromosome_length]
+            current_city = self.cities[i % self.chromosome_length]
             next_city = self.cities[(i + 1) % self.chromosome_length]
-            fitness_value += current_city.distance_to(next_city)
-        self.fitness = fitness_value
-        return fitness_value
+            self.fitness += current_city.distance_to(next_city)
+        
+        return self.fitness
 
     @staticmethod
     def get_random_chromosome(chromosome_length: int):
