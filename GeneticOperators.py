@@ -58,8 +58,15 @@ class GeneticOperators:
 
         mutated_chromosome_cities = np.copy(chromosome.cities)
 
-        first_index = np.random.randint(0, chromosome.chromosome_length)
-        second_index = np.random.randint(0, chromosome.chromosome_length)
+        first_index: int = 0
+        second_index: int = 0
+
+        while True:
+            first_index = np.random.randint(0, chromosome.chromosome_length)
+            second_index = np.random.randint(0, chromosome.chromosome_length)
+
+            if first_index != second_index:
+                break
 
         mutated_chromosome_cities[first_index], mutated_chromosome_cities[second_index] = mutated_chromosome_cities[second_index], mutated_chromosome_cities[first_index]
         
