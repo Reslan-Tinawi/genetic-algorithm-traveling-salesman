@@ -24,46 +24,54 @@ class GeneticOperators:
     # crossover operator
     @staticmethod
     def order_one_crossover(chromosome_1, chromosome_2):
-        chromosome_length = chromosome_1.chromosome_length
-        mid = chromosome_length // 2
-        start_index = np.random.randint(0, mid + 1)
-        end_index = start_index + mid
 
+        chromosome_length = chromosome_1.chromosome_length
         offspring_cities = np.ndarray((chromosome_length,), dtype=np.object)
 
-        selected_cities = chromosome_1.cities[start_index:end_index]
-        offspring_cities[start_index:end_index] = selected_cities
-        copied_cities_ids = set(map(lambda x: x.id, selected_cities))
-        to_be_copied_cities_ids = set(map(lambda x: x.id, chromosome_2.cities)) - copied_cities_ids
+        start_pos, end_pos = 0, 0
+        copied_cities_ids = set()
+        offspring_index = 0
 
-        chromosome_2_index = (end_index % chromosome_length)
-        offspring_index = (end_index % chromosome_length)
+        while True:
+            random_1, random_2 = np.random.randint(low=0, high=chromosome_length, size=(2,))
+            start_pos = min(random_1, random_2)
+            end_pos = max(random_1, random_2)
 
-        while to_be_copied_cities_ids:
+            if start_pos != end_pos:
+                break
+        
+        selected_cities = chromosome_1.cities[start_pos:end_pos]
+        offspring_cities[start_pos:end_pos] = selected_cities
+        copied_cities_ids = set([city.id for city in selected_cities])
+        offspring_none_indices = np.where(offspring_cities==None)[0]
 
-            if chromosome_2.cities[chromosome_2_index].id not in copied_cities_ids:
-                offspring_cities[offspring_index] = chromosome_2.cities[chromosome_2_index]
-                offspring_index = (offspring_index + 1) % chromosome_length
-                to_be_copied_cities_ids.remove(chromosome_2.cities[chromosome_2_index].id)
-
-            chromosome_2_index = (chromosome_2_index + 1) % chromosome_length
+        for city in chromosome_2.cities:
+            if city.id not in copied_cities_ids:
+                offspring_element_index = offspring_none_indices[offspring_index]
+                offspring_cities[offspring_element_index] = city
+                offspring_index += 1
         
         offspring_chromosome = Chromosome(chromosome_length)
         offspring_chromosome.cities = offspring_cities
+
         return offspring_chromosome
     
     # mutation operator
     @staticmethod
-    def swap_mutation(chromosome):
-
+    def swap_mutation(chromosome, mutation_rate):
         mutated_chromosome_cities = np.copy(chromosome.cities)
+        chromosome_length = chromosome.chromosome_length
 
-        first_index = np.random.randint(0, chromosome.chromosome_length)
-        second_index = np.random.randint(0, chromosome.chromosome_length)
+        for i in range(chromosome_length):
+            random_number = np.random.random()
 
-        mutated_chromosome_cities[first_index], mutated_chromosome_cities[second_index] = mutated_chromosome_cities[second_index], mutated_chromosome_cities[first_index]
-        
-        mutated_chromosome = Chromosome(chromosome.chromosome_length)
+            if random_number < mutation_rate:
+                j = i
+                while j != i:
+                    j = np.random.randint(0, chromosome_length)
+                mutated_chromosome_cities[i], mutated_chromosome_cities[j] = mutated_chromosome_cities[j], mutated_chromosome_cities[i]
+
+        mutated_chromosome = Chromosome(chromosome_length)
         mutated_chromosome.cities = mutated_chromosome_cities
-        
+
         return mutated_chromosome
