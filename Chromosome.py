@@ -10,7 +10,7 @@ class Chromosome:
         # TODO:
         #   what should be the value of cities initially
         self.cities = []
-        self.fitness = None
+        self.fitness: float = None
     
     def __repr__(self):
         res = 'Chromosome(chromosome_length: {})'.format(self.chromosome_length) + '\n'
@@ -19,7 +19,7 @@ class Chromosome:
         res += 'fitness value: {}'.format(self.fitness)
         return res
     
-    def __lt__(self, other_chromosome):
+    def __lt__(self, other_chromosome: 'Chromosome'):
         return self.fitness < other_chromosome.fitness
     
     def plot_solution(self):

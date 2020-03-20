@@ -52,19 +52,15 @@ class Population:
 
             offspring_1 = GeneticOperators.order_one_crossover(first_parent, second_parent)
 
-            offspring_2 = GeneticOperators.order_one_crossover(second_parent, first_parent)            
+            offspring_2 = GeneticOperators.order_one_crossover(second_parent, first_parent)
+            
+            mutated_offspring_1 = GeneticOperators.swap_mutation(offspring_1, self.mutation_rate)
+            mutated_offspring_1.get_fitness_value()
 
-            random_number = np.random.random()
-        
-            if random_number < self.mutation_rate:
+            mutated_offspring_2 = GeneticOperators.swap_mutation(offspring_2, self.mutation_rate)
+            mutated_offspring_2.get_fitness_value()
 
-                mutated_offspring_1 = GeneticOperators.swap_mutation(offspring_1)
-                mutated_offspring_1.get_fitness_value()
-
-                mutated_offspring_2 = GeneticOperators.swap_mutation(offspring_2)
-                mutated_offspring_2.get_fitness_value()
-
-                new_population.individuals.append(min(mutated_offspring_1, mutated_offspring_2))
+            new_population.individuals.append(min(mutated_offspring_1, mutated_offspring_2))
         
         return new_population
     

@@ -67,10 +67,11 @@ def call_plot():
 
 def main():
 
-    ga = GeneticAlgorithm(number_of_generations=100, population_size=50, chromosome_length=20, mutation_rate=0.01, chromosome_csv_path='data/data 20.csv')
+    ga = GeneticAlgorithm(number_of_generations=300, population_size=50, chromosome_length=20, mutation_rate=0.02, chromosome_csv_path='data/data 20 (circle).csv')
     ga.solve()
     ga.plot()
     print(ga.best_chromosome)
+
     # ga.plot()
     # cities_coordinates = [(city.x, city.y) for city in ga.best_chromosome.cities]
     # ga.plotTSP(ga.paths, cities_coordinates, 11)

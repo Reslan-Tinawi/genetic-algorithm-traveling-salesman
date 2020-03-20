@@ -28,7 +28,7 @@ class GeneticAlgorithm:
 
         self.paths.append([city.id for city in self.best_chromosome.cities])
 
-        for i in range(self.number_of_iterations):
+        for _ in range(self.number_of_iterations):
             new_population = current_population.evolve_population()
             new_chromosome = new_population.get_fittest_individual()
             
