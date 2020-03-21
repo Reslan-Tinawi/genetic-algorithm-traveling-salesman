@@ -1,5 +1,6 @@
 from Population import *
 from matplotlib.animation import FuncAnimation
+import matplotlib.pyplot as plt
 
 class GeneticAlgorithm:
     

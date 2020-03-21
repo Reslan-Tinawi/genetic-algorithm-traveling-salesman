@@ -1,6 +1,5 @@
 import numpy as np
 from City import *
-import matplotlib.pyplot as plt
 import pandas as pd
 
 class Chromosome:
@@ -21,12 +20,6 @@ class Chromosome:
     
     def __lt__(self, other_chromosome: 'Chromosome'):
         return self.fitness < other_chromosome.fitness
-    
-    def plot_solution(self):
-        x_s = np.fromiter(map(lambda city: city.x, self.cities), dtype=np.float)
-        y_s = np.fromiter(map(lambda city: city.y, self.cities), dtype=np.float)
-        plt.scatter(x_s, y_s)
-        plt.show()
     
     def get_fitness_value(self):
         if self.fitness == None:
