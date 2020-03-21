@@ -38,6 +38,15 @@ class Chromosome:
         
         return self.fitness
 
+    def get_cities_ids(self):
+        cities_ids = np.fromiter(map(lambda city: city.id, self.cities), dtype=np.int)
+        return cities_ids
+    
+    def get_cities_coordinates(self):
+        x_s_coordinates = np.fromiter(map(lambda city: city.x, self.cities), dtype=np.float)
+        y_s_coordinates = np.fromiter(map(lambda city: city.y, self.cities), dtype=np.float)
+        return x_s_coordinates, y_s_coordinates
+
     @staticmethod
     def get_random_chromosome(chromosome_length: int):
         random_chromosome = Chromosome(chromosome_length)
