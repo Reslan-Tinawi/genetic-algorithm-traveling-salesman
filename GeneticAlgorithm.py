@@ -44,34 +44,49 @@ class GeneticAlgorithm:
 
         x_s_coordinates, y_s_coordinates = self.init_chromosome.get_cities_coordinates()
 
-        fig, ax = plt.subplots(nrows=1, ncols=2)
+        fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2)
 
-        line, = ax[0].plot([], [], lw=2)
+        line1, = ax1.plot([], [], lw=2)
 
-        curve, = ax[1].plot([], [], lw=2)
+        line2, = ax2.plot([], [], lw=2)
+
+        line = [line1, line2]
+
+        evolution_x = []
+        evolution_y = []
 
         def init():
 
-            ax[0].plot(x_s_coordinates, y_s_coordinates, 'co')
+            ax1.plot(x_s_coordinates, y_s_coordinates, 'co')
 
             extra_x = (max(x_s_coordinates) - min(x_s_coordinates)) * 0.05
             extra_y = (max(y_s_coordinates) - min(y_s_coordinates)) * 0.05
-            ax[0].set_xlim(min(x_s_coordinates) - extra_x, max(x_s_coordinates) + extra_x)
-            ax[0].set_ylim(min(y_s_coordinates) - extra_y, max(y_s_coordinates) + extra_y)
+            ax1.set_xlim(min(x_s_coordinates) - extra_x, max(x_s_coordinates) + extra_x)
+            ax1.set_ylim(min(y_s_coordinates) - extra_y, max(y_s_coordinates) + extra_y)
 
-            line.set_data([], [])
+
+            extra_x = len(self.evolution_curve) * 0.05
+            extra_y = (max(self.evolution_curve) - min(self.evolution_curve)) * 0.05
+            ax2.set_xlim(0 - extra_x, len(self.evolution_curve) + extra_x)
+            ax2.set_ylim(min(self.evolution_curve) - extra_y, max(self.evolution_curve) + extra_y)
+
+            line[0].set_data([], [])
+            line[1].set_data([], [])
+            return line
 
         def update(frame):
             chromosome_to_plot = self.solutions_history[frame]
-            ax[0].set_title('Generation: {}, fitness: {}'.format(frame, chromosome_to_plot.get_fitness_value()))
+            ax1.set_title('Generation: {}, fitness: {}'.format(frame, chromosome_to_plot.get_fitness_value()))
             cur_x_s = [x_s_coordinates[id] for id in chromosome_to_plot.get_cities_ids()]
             cur_y_s = [y_s_coordinates[id] for id in chromosome_to_plot.get_cities_ids()]
-            line.set_data(cur_x_s, cur_y_s)
+            line[0].set_data(cur_x_s, cur_y_s)
 
             # plot evolution
-            ax[1].set_title('Evolution curve: {}'.format(frame))
-            curve.set_data([frame], [self.evolution_curve[frame]])
-            return line, curve
+            evolution_x.append(frame)
+            evolution_y.append(self.evolution_curve[frame])
+            ax2.set_title('Evolution curve: {}'.format(frame))
+            line[1].set_data(evolution_x, evolution_y)
+            return line
 
         ani = FuncAnimation(fig, update, frames=range(0, len(self.solutions_history)),
                             init_func=init, interval=3, repeat=False)
