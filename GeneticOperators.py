@@ -64,7 +64,7 @@ class GeneticOperators:
 
             if random_number < mutation_rate:
                 j = i
-                while j != i:
+                while j == i:
                     j = np.random.randint(0, chromosome_length)
                 mutated_chromosome_cities[i], mutated_chromosome_cities[j] = mutated_chromosome_cities[j], mutated_chromosome_cities[i]
 
