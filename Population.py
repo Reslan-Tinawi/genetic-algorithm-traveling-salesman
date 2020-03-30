@@ -67,7 +67,7 @@ class Population:
     def get_fittest_individual(self):
         self.individuals = np.sort(self.individuals)
 
-        return self.individuals[0]
+        return self.individuals[-1]
 
     @staticmethod
     def get_random_population(population_size, chromosome_length, mutation_rate, chromosome_csv_path):
