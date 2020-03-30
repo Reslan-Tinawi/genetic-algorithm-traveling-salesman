@@ -28,7 +28,7 @@ class Chromosome:
                 current_city = self.cities[i % self.chromosome_length]
                 next_city = self.cities[(i + 1) % self.chromosome_length]
                 self.fitness += current_city.distance_to(next_city)
-        
+            self.fitness = 1 / (self.fitness + 1)
         return self.fitness
 
     def get_cities_ids(self):

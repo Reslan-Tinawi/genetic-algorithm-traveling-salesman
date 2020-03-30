@@ -27,9 +27,6 @@ class GeneticOperators:
 
         chromosome_length = chromosome_1.chromosome_length
         offspring_cities = np.ndarray((chromosome_length,), dtype=np.object)
-
-        start_pos, end_pos = 0, 0
-        copied_cities_ids = set()
         offspring_index = 0
 
         while True:
@@ -43,14 +40,14 @@ class GeneticOperators:
         selected_cities = chromosome_1.cities[start_pos:end_pos]
         offspring_cities[start_pos:end_pos] = selected_cities
         copied_cities_ids = set([city.id for city in selected_cities])
-        offspring_none_indices = np.where(offspring_cities==None)[0]
+        offspring_none_indices = np.where(offspring_cities == None)[0]
 
         for city in chromosome_2.cities:
             if city.id not in copied_cities_ids:
                 offspring_element_index = offspring_none_indices[offspring_index]
                 offspring_cities[offspring_element_index] = city
                 offspring_index += 1
-        
+
         offspring_chromosome = Chromosome(chromosome_length)
         offspring_chromosome.cities = offspring_cities
 
@@ -67,7 +64,7 @@ class GeneticOperators:
 
             if random_number < mutation_rate:
                 j = i
-                while j != i:
+                while j == i:
                     j = np.random.randint(0, chromosome_length)
                 mutated_chromosome_cities[i], mutated_chromosome_cities[j] = mutated_chromosome_cities[j], mutated_chromosome_cities[i]
 

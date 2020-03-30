@@ -2,6 +2,7 @@ from Population import *
 from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 
+
 class GeneticAlgorithm:
     
     def __init__(self, number_of_generations, population_size, chromosome_length, mutation_rate, chromosome_csv_path=None):
@@ -32,7 +33,7 @@ class GeneticAlgorithm:
             new_population = current_population.evolve_population()
             candidate_chromosome = new_population.get_fittest_individual()
             
-            if candidate_chromosome < self.best_chromosome:
+            if candidate_chromosome > self.best_chromosome:
                 self.best_chromosome = copy.deepcopy(candidate_chromosome)
 
             self.evolution_curve.append(self.best_chromosome.get_fitness_value())

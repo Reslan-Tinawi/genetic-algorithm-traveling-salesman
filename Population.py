@@ -38,8 +38,9 @@ class Population:
         cumulative_probabilities = np.cumsum(fitnesses_probabilities)
 
         new_population: Population = Population(self.population_size, self.chromosome_length, self.mutation_rate)
+        new_population.individuals = list(copy.deepcopy(self.individuals))
 
-        while len(new_population.individuals) != new_population.population_size:
+        while len(new_population.individuals) < 2 * new_population.population_size:
 
             first_parent_index = GeneticOperators.roulette_wheel_selection(cumulative_probabilities)
             second_parent_index = GeneticOperators.roulette_wheel_selection(cumulative_probabilities)
@@ -60,14 +61,21 @@ class Population:
             mutated_offspring_2 = GeneticOperators.swap_mutation(offspring_2, self.mutation_rate)
             mutated_offspring_2.get_fitness_value()
 
-            new_population.individuals.append(min(mutated_offspring_1, mutated_offspring_2))
-        
+            new_population.individuals.append(max(mutated_offspring_1, mutated_offspring_2))
+
+        for chromosome in new_population.individuals:
+            chromosome.fitness = chromosome.get_fitness_value()
+
+        new_population.individuals = np.sort(new_population.individuals)
+
+        new_population.individuals = new_population.individuals[new_population.population_size:]
+
         return new_population
     
     def get_fittest_individual(self):
         self.individuals = np.sort(self.individuals)
 
-        return self.individuals[0]
+        return self.individuals[-1]
 
     @staticmethod
     def get_random_population(population_size, chromosome_length, mutation_rate, chromosome_csv_path):
